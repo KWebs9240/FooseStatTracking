@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FooseStats.Data.Interfaces;
+using FooseStats.Data.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +31,10 @@ namespace FooseStats.Web.Api
         {
             // Add framework services.
             services.AddMvc();
+            services.AddCors();
+
+            services.AddSingleton<IPlayerDA>(new FoosePlayerDAService());
+            services.AddSingleton<IMatchDA>(new FooseMatchDAService());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,6 +43,7 @@ namespace FooseStats.Web.Api
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            app.UseCors(builder => builder.WithOrigins("*").AllowAnyHeader());
             app.UseMvc();
         }
     }

@@ -34,7 +34,14 @@ namespace FooseStats.Data.Services
         {
             using (var db = new FooseStatsContext())
             {
-                return db.Matches.Where(filterFunction).ToList();
+                if(filterFunction == null)
+                {
+                    return db.Matches.ToList();
+                }
+                else
+                {
+                    return db.Matches.Where(filterFunction).ToList();
+                }
             }
         }
 
