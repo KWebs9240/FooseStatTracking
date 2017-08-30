@@ -56,6 +56,7 @@ namespace FooseStats.Data.Services
                 if (updtMatch == null)
                 {
                     db.Matches.Add(matchToSave);
+                    updtMatch = matchToSave;
                 }
                 else
                 {

@@ -43,7 +43,9 @@ namespace FooseStats.Web.Api
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseCors(builder => builder.WithOrigins("*").AllowAnyHeader());
+            app.UseCors(builder => {
+                builder.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
+                });
             app.UseMvc();
         }
     }

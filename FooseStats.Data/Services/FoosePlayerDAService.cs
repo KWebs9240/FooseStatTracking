@@ -4,6 +4,7 @@ using System.Text;
 using System.Linq;
 using FooseStats.Data.FooseStats.Data.Ef;
 using FooseStats.Data.FooseStats.Data.Ef.Entities;
+using FooseStats.Data.FooseStats.Data.Ef.Extensions;
 using FooseStats.Data.Interfaces;
 
 namespace FooseStats.Data.Services
@@ -56,10 +57,11 @@ namespace FooseStats.Data.Services
                 if(updtPlayer == null)
                 {
                     db.Players.Add(playerToSave);
+                    updtPlayer = playerToSave;
                 }
                 else
                 {
-                    updtPlayer = playerToSave;
+                    updtPlayer.CopyProperties(playerToSave);
                 }
 
                 db.SaveChanges();

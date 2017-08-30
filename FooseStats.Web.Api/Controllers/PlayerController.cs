@@ -54,5 +54,12 @@ namespace FooseStats.Web.Api.Controllers
 
             return _playerService.SaveorUpdatePlayer(player);
         }
+
+        [HttpPost]
+        [Route("Delete")]
+        public int DeleteMatch([FromBody]Player playerToDelete)
+        {
+            return _playerService.DeletePlayer(playerToDelete);
+        }
     }
 }

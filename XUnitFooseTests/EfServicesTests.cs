@@ -17,8 +17,8 @@ namespace XUnitFooseTests
             "Michael",
             "Jeff",
             "Jared",
-            "Brittnee",
-            "Travis"
+            "Evan",
+            "Brett",
         };
 
         private List<string> _lastNames = new List<string>()
@@ -29,8 +29,6 @@ namespace XUnitFooseTests
             "Columbus",
             "LaFavors",
             "Friedman",
-            "Keller",
-            "Barnes"
         };
 
         private List<string> _nickNames = new List<string>()
@@ -41,8 +39,8 @@ namespace XUnitFooseTests
             "The Artist",
             "Tampa",
             "JuhJay",
-            "Rando",
-            "Giggem"
+            "Silent",
+            "Swol",
         };
 
         //This is a test to make sure the Ef Sqlite stuff is working as well as create a db file I can use with plenty of dummy data

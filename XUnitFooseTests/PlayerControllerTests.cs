@@ -90,5 +90,11 @@ namespace XUnitFooseTests
 
             Assert.True(invalidExceptionThrown);
         }
+
+        [Fact]
+        public void CreateReturnsNonNullCreated()
+        {
+            Player playerToUpdate = new Player() { PlayerId = new Guid("ee345f7f-5275-48a1-8751-0c5a82646422"), FirstName = "New", LastName = "Guy", NickName = "Chimp9240", UpdateDate = DateTime.Now };
+        }
     }
 }
