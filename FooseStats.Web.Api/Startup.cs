@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using FooseStats.Data.Dto;
+using FooseStats.Data.FooseStats.Data.Ef.Entities;
 using FooseStats.Data.Interfaces;
 using FooseStats.Data.Services;
 using Microsoft.AspNetCore.Builder;
@@ -32,6 +35,11 @@ namespace FooseStats.Web.Api
             // Add framework services.
             services.AddMvc();
             services.AddCors();
+
+            Mapper.Initialize(cnfg =>
+            {
+                cnfg.CreateMap<Player, PlayerDto>();
+            });
 
             services.AddSingleton<IPlayerDA>(new FoosePlayerDAService());
             services.AddSingleton<IMatchDA>(new FooseMatchDAService());

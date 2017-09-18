@@ -3,6 +3,8 @@ using FooseStats.Web.Api.Controllers;
 using FooseStats.Data.FooseStats.Data.Ef.Entities;
 using Xunit;
 using XUnitFooseTests.Mocks;
+using Moq;
+using FooseStats.Data.Interfaces;
 
 namespace XUnitFooseTests
 {
@@ -10,11 +12,12 @@ namespace XUnitFooseTests
     {
         private MockPlayerService _mockPlayerService = null;
         private PlayerController _playerController = null;
+        private Mock<IMatchDA> _moqMatchService = new Mock<IMatchDA>();
 
         public PlayerControllerTests()
         {
             _mockPlayerService = new MockPlayerService();
-            _playerController = new PlayerController(_mockPlayerService);
+            _playerController = new PlayerController(_mockPlayerService, _moqMatchService.Object);
         }
 
         [Fact]

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using FooseStats.Data.Dto;
 using FooseStats.Data.FooseStats.Data.Ef;
 using FooseStats.Data.FooseStats.Data.Ef.Entities;
 using FooseStats.Data.Interfaces;
@@ -13,16 +15,40 @@ namespace FooseStats.Web.Api.Controllers
     public class PlayerController : Controller
     {
         private readonly IPlayerDA _playerService;
+        private readonly IMatchDA _matchService;
 
-        public PlayerController(IPlayerDA playerService)
+        public PlayerController(IPlayerDA playerService, IMatchDA matchService)
         {
             _playerService = playerService;
+            _matchService = matchService;
         }
 
         [HttpGet]
-        public IEnumerable<Player> GetPlayers()
+        public IEnumerable<PlayerDto> GetPlayers([FromQuery] bool LoadGamesInfo = false)
         {
-            List<Player> rtnList = _playerService.GetPlayers().ToList();
+            List<PlayerDto> rtnList = Mapper.Map<List<PlayerDto>>(_playerService.GetPlayers());
+
+            if(LoadGamesInfo)
+            {
+                List<Match> qryMatches = _matchService.GetMatches().ToList();
+
+                foreach(PlayerDto matchPlayer in rtnList)
+                {
+                    matchPlayer.GamesPlayed = qryMatches.Count(x =>
+                    {
+                        return x.Player1Id.Equals(matchPlayer.PlayerId)
+                            || x.Player2Id.Equals(matchPlayer.PlayerId)
+                            || x.Player3Id.Equals(matchPlayer.PlayerId)
+                            || x.Player4Id.Equals(matchPlayer.PlayerId);
+                    });
+
+                    matchPlayer.GamesWon = qryMatches.Count(x =>
+                    {
+                        return ((x.Player1Id.Equals(matchPlayer.PlayerId) || x.Player3Id.Equals(matchPlayer.PlayerId)) && (x.Team1Score > x.Team2Score))
+                            || ((x.Player2Id.Equals(matchPlayer.PlayerId) || x.Player4Id.Equals(matchPlayer.PlayerId)) && (x.Team1Score < x.Team2Score));
+                    });
+                }
+            }
 
             return rtnList;
         }
