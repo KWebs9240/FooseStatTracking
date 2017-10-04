@@ -14,5 +14,12 @@ namespace FooseStats.Data.FooseStats.Data.Ef.Extensions
             source.NickName = copy.NickName;
             source.UpdateDate = DateTime.Now;
         }
+
+        public static void CopyProperties(this MatchType source, MatchType copy)
+        {
+            source.MatchTypeDescription = copy.MatchTypeDescription;
+            source.UpdateDate = copy.UpdateDate;
+            source.UpdateDate = DateTime.Now;
+        }
     }
 }

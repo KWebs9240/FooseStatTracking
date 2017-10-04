@@ -22,6 +22,8 @@ namespace FooseStats.Data.Migrations
 
                     b.Property<bool>("IsDoubles");
 
+                    b.Property<Guid>("MatchTypeId");
+
                     b.Property<Guid>("Player1Id");
 
                     b.Property<Guid>("Player2Id");
@@ -39,6 +41,20 @@ namespace FooseStats.Data.Migrations
                     b.HasKey("MatchId");
 
                     b.ToTable("Matches");
+                });
+
+            modelBuilder.Entity("FooseStats.Data.FooseStats.Data.Ef.Entities.MatchType", b =>
+                {
+                    b.Property<Guid>("MatchTypeId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("MatchTypeDescription");
+
+                    b.Property<DateTime>("UpdateDate");
+
+                    b.HasKey("MatchTypeId");
+
+                    b.ToTable("MatchTypes");
                 });
 
             modelBuilder.Entity("FooseStats.Data.FooseStats.Data.Ef.Entities.Player", b =>

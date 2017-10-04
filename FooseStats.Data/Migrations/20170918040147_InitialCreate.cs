@@ -14,6 +14,7 @@ namespace FooseStats.Data.Migrations
                 {
                     MatchId = table.Column<Guid>(nullable: false),
                     IsDoubles = table.Column<bool>(nullable: false),
+                    MatchTypeId = table.Column<Guid>(nullable: false),
                     Player1Id = table.Column<Guid>(nullable: false),
                     Player2Id = table.Column<Guid>(nullable: false),
                     Player3Id = table.Column<Guid>(nullable: false),
@@ -25,6 +26,19 @@ namespace FooseStats.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Matches", x => x.MatchId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MatchTypes",
+                columns: table => new
+                {
+                    MatchTypeId = table.Column<Guid>(nullable: false),
+                    MatchTypeDescription = table.Column<string>(nullable: true),
+                    UpdateDate = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MatchTypes", x => x.MatchTypeId);
                 });
 
             migrationBuilder.CreateTable(
@@ -47,6 +61,9 @@ namespace FooseStats.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Matches");
+
+            migrationBuilder.DropTable(
+                name: "MatchTypes");
 
             migrationBuilder.DropTable(
                 name: "Players");

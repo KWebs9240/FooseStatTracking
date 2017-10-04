@@ -10,6 +10,7 @@ namespace FooseStats.Data.FooseStats.Data.Ef
     {
         public DbSet<Player> Players { get; set; }
         public DbSet<Match> Matches { get; set; }
+        public DbSet<MatchType> MatchTypes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

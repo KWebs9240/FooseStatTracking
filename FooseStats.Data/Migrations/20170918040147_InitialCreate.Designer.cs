@@ -8,7 +8,7 @@ using FooseStats.Data.FooseStats.Data.Ef;
 namespace FooseStats.Data.Migrations
 {
     [DbContext(typeof(FooseStatsContext))]
-    [Migration("20170727195129_InitialCreate")]
+    [Migration("20170918040147_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,6 +22,8 @@ namespace FooseStats.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<bool>("IsDoubles");
+
+                    b.Property<Guid>("MatchTypeId");
 
                     b.Property<Guid>("Player1Id");
 
@@ -40,6 +42,20 @@ namespace FooseStats.Data.Migrations
                     b.HasKey("MatchId");
 
                     b.ToTable("Matches");
+                });
+
+            modelBuilder.Entity("FooseStats.Data.FooseStats.Data.Ef.Entities.MatchType", b =>
+                {
+                    b.Property<Guid>("MatchTypeId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("MatchTypeDescription");
+
+                    b.Property<DateTime>("UpdateDate");
+
+                    b.HasKey("MatchTypeId");
+
+                    b.ToTable("MatchTypes");
                 });
 
             modelBuilder.Entity("FooseStats.Data.FooseStats.Data.Ef.Entities.Player", b =>

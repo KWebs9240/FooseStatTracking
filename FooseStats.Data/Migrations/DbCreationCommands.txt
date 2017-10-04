@@ -1,0 +1,8 @@
+﻿Remove the existing database migrations
+dotnet ef migrations remove -f
+
+Add the initial create migration
+dotnet ef migrations add InitialCreate
+
+To actually create the thing
+dotnet ef database update

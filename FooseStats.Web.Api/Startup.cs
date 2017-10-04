@@ -43,6 +43,7 @@ namespace FooseStats.Web.Api
 
             services.AddSingleton<IPlayerDA>(new FoosePlayerDAService());
             services.AddSingleton<IMatchDA>(new FooseMatchDAService());
+            services.AddSingleton<IMatchTypeDA>(new FooseMatchTypeDAService());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
