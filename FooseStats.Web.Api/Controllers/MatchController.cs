@@ -59,7 +59,8 @@ namespace FooseStats.Web.Api.Controllers
         }
 
         //DeleteMatch
-        [HttpDelete]
+        [HttpPost]
+        [Route("Delete")]
         public int DeleteMatch([FromBody]Match matchToDelete)
         {
             return _matchService.DeleteMatch(matchToDelete);

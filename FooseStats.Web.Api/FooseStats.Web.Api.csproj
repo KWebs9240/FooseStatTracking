@@ -21,5 +21,10 @@
   <ItemGroup>
     <ProjectReference Include="..\FooseStats.Data\FooseStats.Data.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="FooseStats.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
 </Project>
