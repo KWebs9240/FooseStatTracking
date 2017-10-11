@@ -24,15 +24,16 @@ namespace FooseStats.Web.Api.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<PlayerDto> GetPlayers([FromQuery] bool LoadGamesInfo = false)
+        public IEnumerable<PlayerDto> GetPlayers([FromQuery] bool LoadGamesInfo = false, [FromQuery] bool LoadPointInfo = false)
         {
             List<PlayerDto> rtnList = Mapper.Map<List<PlayerDto>>(_playerService.GetPlayers());
+            List<Match> qryMatches = null;
 
-            if(LoadGamesInfo)
+            if (LoadGamesInfo || LoadPointInfo)
             {
-                List<Match> qryMatches = _matchService.GetMatches().ToList();
+                qryMatches = _matchService.GetMatches().ToList();
 
-                foreach(PlayerDto matchPlayer in rtnList)
+                foreach (PlayerDto matchPlayer in rtnList)
                 {
                     matchPlayer.GamesPlayed = qryMatches.Count(x =>
                     {
@@ -41,12 +42,40 @@ namespace FooseStats.Web.Api.Controllers
                             || x.Player3Id.Equals(matchPlayer.PlayerId)
                             || x.Player4Id.Equals(matchPlayer.PlayerId);
                     });
+                }
+            }
 
+            if (LoadGamesInfo)
+            {
+                foreach(PlayerDto matchPlayer in rtnList)
+                {
                     matchPlayer.GamesWon = qryMatches.Count(x =>
                     {
                         return ((x.Player1Id.Equals(matchPlayer.PlayerId) || x.Player3Id.Equals(matchPlayer.PlayerId)) && (x.Team1Score > x.Team2Score))
                             || ((x.Player2Id.Equals(matchPlayer.PlayerId) || x.Player4Id.Equals(matchPlayer.PlayerId)) && (x.Team1Score < x.Team2Score));
                     });
+                }
+            }
+
+            if (LoadPointInfo)
+            {
+                foreach(PlayerDto matchPlayer in rtnList)
+                {
+                    matchPlayer.TotalPointsScored = qryMatches.Sum(x =>
+                    {
+                        if (x.Player1Id.Equals(matchPlayer.PlayerId)) { return x.Team1Score; }
+                        else if (x.Player2Id.Equals(matchPlayer.PlayerId)) { return x.Team2Score; }
+                        else return 0;
+                    });
+
+                    matchPlayer.TotalPointsAllowed = qryMatches.Sum(x =>
+                    {
+                        if (x.Player1Id.Equals(matchPlayer.PlayerId)) { return x.Team2Score; }
+                        else if (x.Player2Id.Equals(matchPlayer.PlayerId)) { return x.Team1Score; }
+                        else return 0;
+                    });
+
+                    matchPlayer.PointsPerGame = (double)matchPlayer.TotalPointsScored / matchPlayer.GamesPlayed;
                 }
             }
 
