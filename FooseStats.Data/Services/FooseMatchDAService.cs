@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using FooseStats.Data.FooseStats.Data.Ef;
 using FooseStats.Data.FooseStats.Data.Ef.Entities;
+using FooseStats.Data.FooseStats.Data.Ef.Extensions;
 using FooseStats.Data.Interfaces;
 
 namespace FooseStats.Data.Services
@@ -60,7 +61,7 @@ namespace FooseStats.Data.Services
                 }
                 else
                 {
-                    updtMatch = matchToSave;
+                    updtMatch.CopyProperties(matchToSave);
                 }
 
                 db.SaveChanges();

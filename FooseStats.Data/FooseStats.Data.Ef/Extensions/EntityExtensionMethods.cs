@@ -15,6 +15,16 @@ namespace FooseStats.Data.FooseStats.Data.Ef.Extensions
             source.UpdateDate = DateTime.Now;
         }
 
+        public static void CopyProperties(this Match source, Match copy)
+        {
+            source.Player1Id = copy.Player1Id;
+            source.Player2Id = copy.Player2Id;
+            source.Player3Id = copy.Player3Id;
+            source.Player4Id = copy.Player4Id;
+            source.Team1Score = copy.Team1Score;
+            source.Team2Score = copy.Team2Score;
+        }
+
         public static void CopyProperties(this MatchType source, MatchType copy)
         {
             source.MatchTypeDescription = copy.MatchTypeDescription;
