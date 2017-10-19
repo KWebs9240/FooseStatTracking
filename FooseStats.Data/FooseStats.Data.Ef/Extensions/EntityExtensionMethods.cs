@@ -13,6 +13,7 @@ namespace FooseStats.Data.FooseStats.Data.Ef.Extensions
             source.LastName = copy.LastName;
             source.NickName = copy.NickName;
             source.UpdateDate = DateTime.Now;
+            source.HexColor = copy.HexColor;
         }
 
         public static void CopyProperties(this Match source, Match copy)

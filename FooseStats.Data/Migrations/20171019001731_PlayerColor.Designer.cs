@@ -8,9 +8,10 @@ using FooseStats.Data.FooseStats.Data.Ef;
 namespace FooseStats.Data.Migrations
 {
     [DbContext(typeof(FooseStatsContext))]
-    partial class FooseStatsContextModelSnapshot : ModelSnapshot
+    [Migration("20171019001731_PlayerColor")]
+    partial class PlayerColor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2");
