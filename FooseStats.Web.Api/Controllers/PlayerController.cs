@@ -54,6 +54,8 @@ namespace FooseStats.Web.Api.Controllers
                         return ((x.Player1Id.Equals(matchPlayer.PlayerId) || x.Player3Id.Equals(matchPlayer.PlayerId)) && (x.Team1Score > x.Team2Score))
                             || ((x.Player2Id.Equals(matchPlayer.PlayerId) || x.Player4Id.Equals(matchPlayer.PlayerId)) && (x.Team1Score < x.Team2Score));
                     });
+
+                    matchPlayer.GamesWonPct = (decimal)matchPlayer.GamesWon / matchPlayer.GamesPlayed;
                 }
             }
 
@@ -75,7 +77,7 @@ namespace FooseStats.Web.Api.Controllers
                         else return 0;
                     });
 
-                    matchPlayer.PointsPerGame = (double)matchPlayer.TotalPointsScored / matchPlayer.GamesPlayed;
+                    matchPlayer.PointsPerGame = (decimal)matchPlayer.TotalPointsScored / matchPlayer.GamesPlayed;
                 }
             }
 

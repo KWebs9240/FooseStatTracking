@@ -16,10 +16,11 @@ namespace FooseStats.Data.Dto
         //Games Info
         public int GamesPlayed { get; set; }
         public int GamesWon { get; set; }
+        public decimal GamesWonPct { get; set; }
 
         //Points Info
         public int TotalPointsScored { get; set; }
         public int TotalPointsAllowed { get; set; }
-        public double PointsPerGame { get; set; }
+        public decimal PointsPerGame { get; set; }
     }
 }
