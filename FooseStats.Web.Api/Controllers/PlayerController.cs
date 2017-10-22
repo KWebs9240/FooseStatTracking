@@ -55,7 +55,7 @@ namespace FooseStats.Web.Api.Controllers
                             || ((x.Player2Id.Equals(matchPlayer.PlayerId) || x.Player4Id.Equals(matchPlayer.PlayerId)) && (x.Team1Score < x.Team2Score));
                     });
 
-                    matchPlayer.GamesWonPct = (decimal)matchPlayer.GamesWon / matchPlayer.GamesPlayed;
+                    matchPlayer.GamesWonPct = ((decimal)matchPlayer.GamesWon / matchPlayer.GamesPlayed) * 100;
                 }
             }
 
