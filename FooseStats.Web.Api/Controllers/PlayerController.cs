@@ -35,13 +35,13 @@ namespace FooseStats.Web.Api.Controllers
 
                 foreach (PlayerDto matchPlayer in rtnList)
                 {
-                    matchPlayer.GamesPlayed = qryMatches.Count(x =>
+                    matchPlayer.GamesPlayed = qryMatches.GroupBy(x => x.MatchTypeId).ToDictionary(x => x.Key, x => x.ToList().Count(y =>
                     {
-                        return x.Player1Id.Equals(matchPlayer.PlayerId)
-                            || x.Player2Id.Equals(matchPlayer.PlayerId)
-                            || x.Player3Id.Equals(matchPlayer.PlayerId)
-                            || x.Player4Id.Equals(matchPlayer.PlayerId);
-                    });
+                        return y.Player1Id.Equals(matchPlayer.PlayerId)
+                            || y.Player2Id.Equals(matchPlayer.PlayerId)
+                            || y.Player3Id.Equals(matchPlayer.PlayerId)
+                            || y.Player4Id.Equals(matchPlayer.PlayerId);
+                    }));
                 }
             }
 
@@ -49,13 +49,23 @@ namespace FooseStats.Web.Api.Controllers
             {
                 foreach(PlayerDto matchPlayer in rtnList)
                 {
-                    matchPlayer.GamesWon = qryMatches.Count(x =>
+                    matchPlayer.GamesWon = qryMatches.GroupBy(x => x.MatchTypeId).ToDictionary(x => x.Key, x => x.ToList().Count(y =>
                     {
-                        return ((x.Player1Id.Equals(matchPlayer.PlayerId) || x.Player3Id.Equals(matchPlayer.PlayerId)) && (x.Team1Score > x.Team2Score))
-                            || ((x.Player2Id.Equals(matchPlayer.PlayerId) || x.Player4Id.Equals(matchPlayer.PlayerId)) && (x.Team1Score < x.Team2Score));
-                    });
+                        return ((y.Player1Id.Equals(matchPlayer.PlayerId) || y.Player3Id.Equals(matchPlayer.PlayerId)) && (y.Team1Score > y.Team2Score))
+                            || ((y.Player2Id.Equals(matchPlayer.PlayerId) || y.Player4Id.Equals(matchPlayer.PlayerId)) && (y.Team1Score < y.Team2Score));
+                    }));
 
-                    matchPlayer.GamesWonPct = ((decimal)matchPlayer.GamesWon / matchPlayer.GamesPlayed) * 100;
+                    foreach (Guid matchTypeGuid in matchPlayer.GamesPlayed.Keys)
+                    {
+                        if (matchPlayer.GamesWon.ContainsKey(matchTypeGuid) && (matchPlayer.GamesPlayed[matchTypeGuid] > 0))
+                        {
+                            matchPlayer.GamesWonPct.Add(matchTypeGuid, (((decimal)matchPlayer.GamesWon[matchTypeGuid] / matchPlayer.GamesPlayed[matchTypeGuid]) * 100));
+                        }
+                        else
+                        {
+                            matchPlayer.GamesWonPct.Add(matchTypeGuid, 0);
+                        }
+                    }
                 }
             }
 
@@ -63,21 +73,31 @@ namespace FooseStats.Web.Api.Controllers
             {
                 foreach(PlayerDto matchPlayer in rtnList)
                 {
-                    matchPlayer.TotalPointsScored = qryMatches.Sum(x =>
+                    matchPlayer.TotalPointsScored = qryMatches.GroupBy(x => x.MatchTypeId).ToDictionary(x => x.Key, x => x.Sum(y =>
                     {
-                        if (x.Player1Id.Equals(matchPlayer.PlayerId)) { return x.Team1Score; }
-                        else if (x.Player2Id.Equals(matchPlayer.PlayerId)) { return x.Team2Score; }
+                        if (y.Player1Id.Equals(matchPlayer.PlayerId)) { return y.Team1Score; }
+                        else if (y.Player2Id.Equals(matchPlayer.PlayerId)) { return y.Team2Score; }
                         else return 0;
-                    });
+                    }));
 
-                    matchPlayer.TotalPointsAllowed = qryMatches.Sum(x =>
+                    matchPlayer.TotalPointsAllowed = qryMatches.GroupBy(x => x.MatchTypeId).ToDictionary(x => x.Key, x => x.Sum(y =>
                     {
-                        if (x.Player1Id.Equals(matchPlayer.PlayerId)) { return x.Team2Score; }
-                        else if (x.Player2Id.Equals(matchPlayer.PlayerId)) { return x.Team1Score; }
+                        if (y.Player1Id.Equals(matchPlayer.PlayerId)) { return y.Team2Score; }
+                        else if (y.Player2Id.Equals(matchPlayer.PlayerId)) { return y.Team1Score; }
                         else return 0;
-                    });
+                    }));
 
-                    matchPlayer.PointsPerGame = (decimal)matchPlayer.TotalPointsScored / matchPlayer.GamesPlayed;
+                    foreach (Guid matchTypeGuid in matchPlayer.GamesPlayed.Keys)
+                    {
+                        if (matchPlayer.TotalPointsScored.ContainsKey(matchTypeGuid) && (matchPlayer.GamesPlayed[matchTypeGuid] > 0))
+                        {
+                            matchPlayer.PointsPerGame.Add(matchTypeGuid, ((decimal)matchPlayer.TotalPointsScored[matchTypeGuid] / matchPlayer.GamesPlayed[matchTypeGuid]));
+                        }
+                        else
+                        {
+                            matchPlayer.PointsPerGame.Add(matchTypeGuid, 0);
+                        }
+                    }
                 }
             }
 

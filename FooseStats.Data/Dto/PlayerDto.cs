@@ -14,13 +14,13 @@ namespace FooseStats.Data.Dto
         public string HexColor { get; set; }
 
         //Games Info
-        public int GamesPlayed { get; set; }
-        public int GamesWon { get; set; }
-        public decimal GamesWonPct { get; set; }
+        public Dictionary<Guid, int> GamesPlayed { get; set; }
+        public Dictionary<Guid, int> GamesWon { get; set; }
+        public Dictionary<Guid, decimal> GamesWonPct { get; set; } = new Dictionary<Guid, decimal>();
 
         //Points Info
-        public int TotalPointsScored { get; set; }
-        public int TotalPointsAllowed { get; set; }
-        public decimal PointsPerGame { get; set; }
+        public Dictionary<Guid, int> TotalPointsScored { get; set; }
+        public Dictionary<Guid, int> TotalPointsAllowed { get; set; }
+        public Dictionary<Guid, decimal> PointsPerGame { get; set; } = new Dictionary<Guid, decimal>();
     }
 }
