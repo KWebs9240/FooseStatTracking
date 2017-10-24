@@ -56,6 +56,7 @@ namespace FooseStats.Data.Services
 
                 if (updtMatchType == null)
                 {
+                    matchTypeToSave.CreatedDate = DateTime.Now;
                     db.MatchTypes.Add(matchTypeToSave);
                     updtMatchType = matchTypeToSave;
                 }

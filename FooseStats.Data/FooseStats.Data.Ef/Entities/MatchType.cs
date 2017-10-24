@@ -9,6 +9,7 @@ namespace FooseStats.Data.FooseStats.Data.Ef.Entities
         public Guid MatchTypeId { get; set; }
         public string MatchTypeDescription { get; set; }
         public int MaxPoints { get; set; }
+        public DateTime CreatedDate { get; set; }
         public DateTime UpdateDate { get; set; }
     }
 }

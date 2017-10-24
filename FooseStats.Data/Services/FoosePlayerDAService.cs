@@ -56,6 +56,7 @@ namespace FooseStats.Data.Services
                 
                 if(updtPlayer == null)
                 {
+                    playerToSave.CreatedDate = DateTime.Now;
                     db.Players.Add(playerToSave);
                     updtPlayer = playerToSave;
                 }

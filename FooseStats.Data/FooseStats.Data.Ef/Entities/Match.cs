@@ -17,6 +17,7 @@ namespace FooseStats.Data.FooseStats.Data.Ef.Entities
         public int Team2Score { get; set; }
         public bool IsDoubles { get; set; }
         public Guid MatchTypeId { get; set; }
+        public DateTime CreatedDate { get; set; }
         public DateTime UpdateDate { get; set; }
     }
 }
