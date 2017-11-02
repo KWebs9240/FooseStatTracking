@@ -8,7 +8,7 @@ namespace StatTrackerFunctions
     public static class DailyBackup
     {
         [FunctionName("DailyBackup")]
-        public static void Run([TimerTrigger("0 0 3 1/1 * ? *")]TimerInfo myTimer, TraceWriter log)
+        public static void Run([TimerTrigger("0 0 8 1/1 * ? *")]TimerInfo myTimer, TraceWriter log)
         {
             log.Info($"C# Timer trigger function executed at: {DateTime.Now}");
 
