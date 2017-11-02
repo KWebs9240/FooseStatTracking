@@ -23,6 +23,7 @@ namespace FooseStats.Web.Api
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile($"appsettings.PrivateApiKeys.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -44,6 +45,7 @@ namespace FooseStats.Web.Api
             services.AddSingleton<IPlayerDA>(new FoosePlayerDAService());
             services.AddSingleton<IMatchDA>(new FooseMatchDAService());
             services.AddSingleton<IMatchTypeDA>(new FooseMatchTypeDAService());
+            services.AddSingleton<IConfigurationRoot>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
