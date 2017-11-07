@@ -40,6 +40,7 @@ namespace FooseStats.Web.Api
             Mapper.Initialize(cnfg =>
             {
                 cnfg.CreateMap<Player, PlayerDto>();
+                cnfg.CreateMap<Player, RivalDto>();
             });
 
             services.AddSingleton<IPlayerDA>(new FoosePlayerDAService());
