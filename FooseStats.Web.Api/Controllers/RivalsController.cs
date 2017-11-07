@@ -85,15 +85,15 @@ namespace FooseStats.Web.Api.Controllers
 
                 rivalPlayer.PlayerTotalPointsScored = qryMatches.GroupBy(x => x.MatchTypeId).ToDictionary(x => x.Key, x => x.Sum(y =>
                 {
-                    if (y.Player1Id.Equals(playerId)) { return y.Team1Score; }
-                    else if (y.Player2Id.Equals(playerId)) { return y.Team2Score; }
+                    if (y.Player1Id.Equals(rivalPlayer.PlayerId)) { return y.Team2Score; }
+                    else if (y.Player2Id.Equals(rivalPlayer.PlayerId)) { return y.Team1Score; }
                     else return 0;
                 }));
 
-                rivalPlayer.RivalTotalPointsAllowed = qryMatches.GroupBy(x => x.MatchTypeId).ToDictionary(x => x.Key, x => x.Sum(y =>
+                rivalPlayer.PlayerTotalPointsScored = qryMatches.GroupBy(x => x.MatchTypeId).ToDictionary(x => x.Key, x => x.Sum(y =>
                 {
-                    if (y.Player1Id.Equals(playerId)) { return y.Team2Score; }
-                    else if (y.Player2Id.Equals(playerId)) { return y.Team1Score; }
+                    if (y.Player1Id.Equals(rivalPlayer.PlayerId)) { return y.Team1Score; }
+                    else if (y.Player2Id.Equals(rivalPlayer.PlayerId)) { return y.Team2Score; }
                     else return 0;
                 }));
 
