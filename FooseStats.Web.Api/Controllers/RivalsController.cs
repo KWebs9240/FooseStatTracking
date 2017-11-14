@@ -90,13 +90,6 @@ namespace FooseStats.Web.Api.Controllers
                     else return 0;
                 }));
 
-                rivalPlayer.PlayerTotalPointsScored = qryMatches.GroupBy(x => x.MatchTypeId).ToDictionary(x => x.Key, x => x.Sum(y =>
-                {
-                    if (y.Player1Id.Equals(rivalPlayer.PlayerId)) { return y.Team1Score; }
-                    else if (y.Player2Id.Equals(rivalPlayer.PlayerId)) { return y.Team2Score; }
-                    else return 0;
-                }));
-
                 foreach (Guid matchTypeGuid in rivalPlayer.RivalGamesPlayed.Keys)
                 {
                     if (rivalPlayer.RivalTotalPointsScored.ContainsKey(matchTypeGuid) && (rivalPlayer.RivalGamesPlayed[matchTypeGuid] > 0))
