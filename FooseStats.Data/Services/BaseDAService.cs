@@ -9,19 +9,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FooseStats.Data.Services
 {
-    public class BaseDAService<T> where T : class, IUpdatable
+    public class BaseDAService<T> : IBaseDA<T> where T : class, IUpdatable
     {
         private readonly Func<FooseStatsContext, DbSet<T>> _dbSetFunc;
         private readonly Func<T, T, bool> _pkCheckFunc;
 
-        BaseDAService(Func<FooseStatsContext, DbSet<T>> dbSetFunc,
+        public BaseDAService(Func<FooseStatsContext, DbSet<T>> dbSetFunc,
             Func<T, T, bool> pkCheckFunc)
         {
             _dbSetFunc = dbSetFunc;
             _pkCheckFunc = pkCheckFunc;
         }
 
-        public int Delete(T toDelete)
+        public virtual int Delete(T toDelete)
         {
             using (var db = new FooseStatsContext())
             {
@@ -31,7 +31,7 @@ namespace FooseStats.Data.Services
             }
         }
 
-        public int DeleteEnum(IEnumerable<T> enumToDelete)
+        public virtual int DeleteEnum(IEnumerable<T> enumToDelete)
         {
             using (var db = new FooseStatsContext())
             {
@@ -41,7 +41,7 @@ namespace FooseStats.Data.Services
             }
         }
 
-        public IEnumerable<T> Get(Func<T, bool> filterFunction = null)
+        public virtual IEnumerable<T> Get(Func<T, bool> filterFunction = null)
         {
             using (var db = new FooseStatsContext())
             {
@@ -56,7 +56,7 @@ namespace FooseStats.Data.Services
             }
         }
 
-        public T SaveorUpdate(T toSave)
+        public virtual T SaveorUpdate(T toSave)
         {
             using (var db = new FooseStatsContext())
             {
@@ -79,7 +79,7 @@ namespace FooseStats.Data.Services
             }
         }
 
-        public IEnumerable<T> SaveorUpdateEnum(IEnumerable<T> enumToSave)
+        public virtual IEnumerable<T> SaveorUpdateEnum(IEnumerable<T> enumToSave)
         {
             enumToSave.ToList().ForEach(x => x = SaveorUpdate(x));
 

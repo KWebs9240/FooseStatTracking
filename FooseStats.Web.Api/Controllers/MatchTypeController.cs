@@ -11,9 +11,9 @@ namespace FooseStats.Web.Api.Controllers
     [Route("api/[controller]")]
     public class MatchTypeController : Controller
     {
-        private readonly IMatchTypeDA _matchTypeService;
+        private readonly IBaseDA<MatchType> _matchTypeService;
 
-        public MatchTypeController(IMatchTypeDA matchTypeService)
+        public MatchTypeController(IBaseDA<MatchType> matchTypeService)
         {
             _matchTypeService = matchTypeService;
         }
@@ -22,7 +22,7 @@ namespace FooseStats.Web.Api.Controllers
         [HttpGet]
         public IEnumerable<MatchType> GetMatchTypes()
         {
-            IEnumerable<MatchType> rtnList = _matchTypeService.GetMatchTypes();
+            IEnumerable<MatchType> rtnList = _matchTypeService.Get();
 
             return rtnList;
         }
@@ -32,7 +32,7 @@ namespace FooseStats.Web.Api.Controllers
         public MatchType AddMatchType([FromBody]MatchType matchTypeToAdd)
         {
             if (matchTypeToAdd.MatchTypeId != null &&
-                _matchTypeService.GetMatchTypes(x => x.MatchTypeId.Equals(matchTypeToAdd.MatchTypeId)).Any())
+                _matchTypeService.Get(x => x.MatchTypeId.Equals(matchTypeToAdd.MatchTypeId)).Any())
             {
                 throw new InvalidOperationException("A match type with that Id already exist.");
             }
@@ -42,7 +42,7 @@ namespace FooseStats.Web.Api.Controllers
                 matchTypeToAdd.MatchTypeId = Guid.NewGuid();
             }
 
-            return _matchTypeService.SaveorUpdateMatchTypes(matchTypeToAdd);
+            return _matchTypeService.SaveorUpdate(matchTypeToAdd);
         }
 
         //UpdateMatch
@@ -55,7 +55,7 @@ namespace FooseStats.Web.Api.Controllers
             //    throw new InvalidOperationException("Match type to update does not already exist.");
             //}
 
-            return _matchTypeService.SaveorUpdateMatchTypes(matchTypeToUpdate);
+            return _matchTypeService.SaveorUpdate(matchTypeToUpdate);
         }
 
         //DeleteMatch
@@ -63,7 +63,7 @@ namespace FooseStats.Web.Api.Controllers
         [Route("Delete")]
         public int DeleteMatchType([FromBody]MatchType matchTypeToDelete)
         {
-            return _matchTypeService.DeleteMatchType(matchTypeToDelete);
+            return _matchTypeService.Delete(matchTypeToDelete);
         }
     }
 }

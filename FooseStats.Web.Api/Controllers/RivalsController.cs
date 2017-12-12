@@ -13,10 +13,10 @@ namespace FooseStats.Web.Api.Controllers
     [Route("api/[controller]")]
     public class RivalsController
     {
-        private readonly IPlayerDA _playerService;
-        private readonly IMatchDA _matchService;
+        private readonly IBaseDA<Player> _playerService;
+        private readonly IBaseDA<Match> _matchService;
 
-        public RivalsController(IPlayerDA playerService, IMatchDA matchService)
+        public RivalsController(IBaseDA<Player> playerService, IBaseDA<Match> matchService)
         {
             _playerService = playerService;
             _matchService = matchService;
@@ -25,9 +25,9 @@ namespace FooseStats.Web.Api.Controllers
         [HttpGet]
         public IEnumerable<RivalDto> GetPlayerDetails([FromQuery] Guid playerId, [FromQuery] bool LoadPointInfo = false)
         {
-            List<RivalDto> rtnList = Mapper.Map<List<RivalDto>>(_playerService.GetPlayers(x => !x.PlayerId.Equals(playerId)));
+            List<RivalDto> rtnList = Mapper.Map<List<RivalDto>>(_playerService.Get(x => !x.PlayerId.Equals(playerId)));
 
-            List<Match> qryMatches = _matchService.GetMatches(x =>
+            List<Match> qryMatches = _matchService.Get(x =>
             {
                 return x.Player1Id.Equals(playerId)
                         || x.Player2Id.Equals(playerId)
