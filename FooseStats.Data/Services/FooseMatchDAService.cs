@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 using FooseStats.Data.FooseStats.Data.Ef;
 using FooseStats.Data.FooseStats.Data.Ef.Entities;
-using FooseStats.Data.FooseStats.Data.Ef.Extensions;
 using FooseStats.Data.Interfaces;
+using AutoMapper;
 
 namespace FooseStats.Data.Services
 {
@@ -62,7 +62,7 @@ namespace FooseStats.Data.Services
                 }
                 else
                 {
-                    updtMatch.CopyProperties(matchToSave);
+                    Mapper.Map<Match, Match>(updtMatch, matchToSave);
                 }
 
                 db.SaveChanges();

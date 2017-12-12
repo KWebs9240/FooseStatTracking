@@ -1,11 +1,12 @@
-﻿using System;
+﻿using FooseStats.Data.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace FooseStats.Data.FooseStats.Data.Ef.Entities
 {
-    public class AlmaMater
+    public class AlmaMater : IUpdatable
     {
         [Key]
         public Guid AlmaMaterId { get; set; }

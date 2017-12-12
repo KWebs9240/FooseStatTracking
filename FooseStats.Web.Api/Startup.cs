@@ -39,8 +39,16 @@ namespace FooseStats.Web.Api
 
             Mapper.Initialize(cnfg =>
             {
+                //Entity to Dto Maps
                 cnfg.CreateMap<Player, PlayerDto>();
                 cnfg.CreateMap<Player, RivalDto>();
+
+                //Entity to entity for copying maps
+                CreateUpdateableMap<Player>(cnfg);
+                CreateUpdateableMap<Match>(cnfg);
+                CreateUpdateableMap<MatchType>(cnfg);
+                CreateUpdateableMap<AlmaMater>(cnfg);
+                CreateUpdateableMap<Location>(cnfg);
             });
 
             services.AddSingleton<IPlayerDA>(new FoosePlayerDAService());
@@ -59,6 +67,13 @@ namespace FooseStats.Web.Api
                 builder.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
                 });
             app.UseMvc();
+        }
+
+        private void CreateUpdateableMap<T>(IMapperConfigurationExpression cnfg) where T : IUpdatable
+        {
+            cnfg.CreateMap<T, T>()
+                    .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
+                    .ForMember(dest => dest.UpdateDate, opt => opt.ResolveUsing<DateTime>(x => DateTime.Now));
         }
     }
 }

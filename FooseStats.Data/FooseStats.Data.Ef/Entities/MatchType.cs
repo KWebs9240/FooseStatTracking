@@ -1,10 +1,11 @@
-﻿using System;
+﻿using FooseStats.Data.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace FooseStats.Data.FooseStats.Data.Ef.Entities
 {
-    public class MatchType
+    public class MatchType : IUpdatable
     {
         public Guid MatchTypeId { get; set; }
         public string MatchTypeDescription { get; set; }

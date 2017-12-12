@@ -1,11 +1,12 @@
-﻿using System;
+﻿using FooseStats.Data.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace FooseStats.Data.FooseStats.Data.Ef.Entities
 {
-    public class Player
+    public class Player : IUpdatable
     {
         [Key]
         public Guid PlayerId { get; set; }
