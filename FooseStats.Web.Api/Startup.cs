@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using FooseStats.Data.FooseStats.Data.Ef;
 
 namespace FooseStats.Web.Api
 {
@@ -39,13 +40,23 @@ namespace FooseStats.Web.Api
 
             Mapper.Initialize(cnfg =>
             {
+                //Entity to Dto Maps
                 cnfg.CreateMap<Player, PlayerDto>();
                 cnfg.CreateMap<Player, RivalDto>();
+
+                //Entity to entity for copying maps
+                CreateUpdateableMap<Player>(cnfg);
+                CreateUpdateableMap<Match>(cnfg);
+                CreateUpdateableMap<MatchType>(cnfg);
+                CreateUpdateableMap<AlmaMater>(cnfg);
+                CreateUpdateableMap<Location>(cnfg);
             });
 
-            services.AddSingleton<IPlayerDA>(new FoosePlayerDAService());
-            services.AddSingleton<IMatchDA>(new FooseMatchDAService());
-            services.AddSingleton<IMatchTypeDA>(new FooseMatchTypeDAService());
+            services.AddSingleton<IBaseDA<Player>>(new BaseDAService<Player>((FooseStatsContext db) => db.Players, (P1, P2) => P1.PlayerId.Equals(P2.PlayerId)));
+            services.AddSingleton<IBaseDA<Match>>(new BaseDAService<Match>((FooseStatsContext db) => db.Matches, (M1, M2) => M1.MatchId.Equals(M2.MatchId)));
+            services.AddSingleton<IBaseDA<MatchType>>(new BaseDAService<MatchType>((FooseStatsContext db) => db.MatchTypes, (MT1, MT2) => MT1.MatchTypeId.Equals(MT2.MatchTypeId)));
+            services.AddSingleton<IBaseDA<Location>>(new BaseDAService<Location>((FooseStatsContext db) => db.Locations, (L1, L2) => L1.LocationId.Equals(L2.LocationId)));
+            services.AddSingleton<IBaseDA<AlmaMater>>(new BaseDAService<AlmaMater>((FooseStatsContext db) => db.AlmaMaters, (AM1, AM2) => AM1.AlmaMaterId.Equals(AM2.AlmaMaterId)));
             services.AddSingleton<IConfigurationRoot>(Configuration);
         }
 
@@ -59,6 +70,13 @@ namespace FooseStats.Web.Api
                 builder.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
                 });
             app.UseMvc();
+        }
+
+        private void CreateUpdateableMap<T>(IMapperConfigurationExpression cnfg) where T : IUpdatable
+        {
+            cnfg.CreateMap<T, T>()
+                    .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
+                    .ForMember(dest => dest.UpdateDate, opt => opt.ResolveUsing<DateTime>(x => DateTime.Now));
         }
     }
 }

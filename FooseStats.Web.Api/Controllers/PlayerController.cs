@@ -14,10 +14,10 @@ namespace FooseStats.Web.Api.Controllers
     [Route("api/[controller]")]
     public class PlayerController : Controller
     {
-        private readonly IPlayerDA _playerService;
-        private readonly IMatchDA _matchService;
+        private readonly IBaseDA<Player> _playerService;
+        private readonly IBaseDA<Match> _matchService;
 
-        public PlayerController(IPlayerDA playerService, IMatchDA matchService)
+        public PlayerController(IBaseDA<Player> playerService, IBaseDA<Match> matchService)
         {
             _playerService = playerService;
             _matchService = matchService;
@@ -26,12 +26,12 @@ namespace FooseStats.Web.Api.Controllers
         [HttpGet]
         public IEnumerable<PlayerDto> GetPlayers([FromQuery] bool LoadGamesInfo = false, [FromQuery] bool LoadPointInfo = false)
         {
-            List<PlayerDto> rtnList = Mapper.Map<List<PlayerDto>>(_playerService.GetPlayers());
+            List<PlayerDto> rtnList = Mapper.Map<List<PlayerDto>>(_playerService.Get());
             List<Match> qryMatches = null;
 
             if (LoadGamesInfo || LoadPointInfo)
             {
-                qryMatches = _matchService.GetMatches().ToList();
+                qryMatches = _matchService.Get().ToList();
 
                 foreach (PlayerDto matchPlayer in rtnList)
                 {
@@ -108,7 +108,7 @@ namespace FooseStats.Web.Api.Controllers
         public Player AddPlayer([FromBody]Player player)
         {
             if (player.PlayerId != null &&
-                _playerService.GetPlayers(x => x.PlayerId.Equals(player.PlayerId)).Any())
+                _playerService.Get(x => x.PlayerId.Equals(player.PlayerId)).Any())
             {
                 throw new InvalidOperationException("A Player with that Id already exist.");
             }
@@ -118,25 +118,25 @@ namespace FooseStats.Web.Api.Controllers
                 player.PlayerId = Guid.NewGuid();
             }
 
-            return _playerService.SaveorUpdatePlayer(player);
+            return _playerService.SaveorUpdate(player);
         }
 
         [HttpPut]
         public Player UpdatePlayer([FromBody]Player player)
         {
-            if(!_playerService.GetPlayers(x => x.PlayerId.Equals(player.PlayerId)).Any())
+            if(!_playerService.Get(x => x.PlayerId.Equals(player.PlayerId)).Any())
             {
                 throw new InvalidOperationException("Player to update does not already exist.");
             }
 
-            return _playerService.SaveorUpdatePlayer(player);
+            return _playerService.SaveorUpdate(player);
         }
 
         [HttpPost]
         [Route("Delete")]
         public int DeleteMatch([FromBody]Player playerToDelete)
         {
-            return _playerService.DeletePlayer(playerToDelete);
+            return _playerService.Delete(playerToDelete);
         }
     }
 }

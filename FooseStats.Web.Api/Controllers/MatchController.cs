@@ -11,9 +11,9 @@ namespace FooseStats.Web.Api.Controllers
     [Route("api/[controller]")]
     public class MatchController : Controller
     {
-        private readonly IMatchDA _matchService;
+        private readonly IBaseDA<Match> _matchService;
 
-        public MatchController(IMatchDA matchService)
+        public MatchController(IBaseDA<Match> matchService)
         {
             _matchService = matchService;
         }
@@ -22,7 +22,7 @@ namespace FooseStats.Web.Api.Controllers
         [HttpGet]
         public IEnumerable<Match> GetMatches()
         {
-            IEnumerable<Match> rtnList = _matchService.GetMatches();
+            IEnumerable<Match> rtnList = _matchService.Get();
 
             return rtnList;
         }
@@ -32,7 +32,7 @@ namespace FooseStats.Web.Api.Controllers
         public Match AddMatch([FromBody]Match matchToAdd)
         {
             if (matchToAdd.MatchId != null &&
-                _matchService.GetMatches(x => x.MatchId.Equals(matchToAdd.MatchId)).Any())
+                _matchService.Get(x => x.MatchId.Equals(matchToAdd.MatchId)).Any())
             {
                 throw new InvalidOperationException("A match with that Id already exist.");
             }
@@ -42,7 +42,7 @@ namespace FooseStats.Web.Api.Controllers
                 matchToAdd.MatchId = Guid.NewGuid();
             }
 
-            return _matchService.SaveorUpdateMatches(matchToAdd);
+            return _matchService.SaveorUpdate(matchToAdd);
         }
 
         //UpdateMatch
@@ -50,12 +50,12 @@ namespace FooseStats.Web.Api.Controllers
         public Match UpdateMatch([FromBody]Match matchToUpdate)
         {
             if(matchToUpdate.MatchId == null
-                || !_matchService.GetMatches(x => x.MatchId.Equals(matchToUpdate.MatchId)).Any())
+                || !_matchService.Get(x => x.MatchId.Equals(matchToUpdate.MatchId)).Any())
             {
                 throw new InvalidOperationException("Match to update does not already exist.");
             }
 
-            return _matchService.SaveorUpdateMatches(matchToUpdate);
+            return _matchService.SaveorUpdate(matchToUpdate);
         }
 
         //DeleteMatch
@@ -63,7 +63,7 @@ namespace FooseStats.Web.Api.Controllers
         [Route("Delete")]
         public int DeleteMatch([FromBody]Match matchToDelete)
         {
-            return _matchService.DeleteMatch(matchToDelete);
+            return _matchService.Delete(matchToDelete);
         }
     }
 }

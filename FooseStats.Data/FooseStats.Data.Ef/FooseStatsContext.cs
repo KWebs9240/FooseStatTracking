@@ -11,6 +11,8 @@ namespace FooseStats.Data.FooseStats.Data.Ef
         public DbSet<Player> Players { get; set; }
         public DbSet<Match> Matches { get; set; }
         public DbSet<MatchType> MatchTypes { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<AlmaMater> AlmaMaters { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

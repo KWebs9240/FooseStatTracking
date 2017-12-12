@@ -9,45 +9,45 @@ using Microsoft.AspNetCore.Mvc;
 namespace FooseStats.Web.Api.Controllers
 {
     [Route("api/[controller]")]
-    public class MatchTypeController : Controller
+    public class AlmaMaterController : Controller
     {
-        private readonly IBaseDA<MatchType> _matchTypeService;
+        private readonly IBaseDA<AlmaMater> _almaMaterService;
 
-        public MatchTypeController(IBaseDA<MatchType> matchTypeService)
+        public AlmaMaterController(IBaseDA<AlmaMater> almaMaterService)
         {
-            _matchTypeService = matchTypeService;
+            _almaMaterService = almaMaterService;
         }
 
         //GetMatches
         [HttpGet]
-        public IEnumerable<MatchType> GetMatchTypes()
+        public IEnumerable<AlmaMater> GetAlmaMaters()
         {
-            IEnumerable<MatchType> rtnList = _matchTypeService.Get();
+            IEnumerable<AlmaMater> rtnList = _almaMaterService.Get();
 
             return rtnList;
         }
 
         //AddMatch
         [HttpPost]
-        public MatchType AddMatchType([FromBody]MatchType matchTypeToAdd)
+        public AlmaMater AddAlmaMater([FromBody]AlmaMater almaMaterToAdd)
         {
-            if (matchTypeToAdd.MatchTypeId != null &&
-                _matchTypeService.Get(x => x.MatchTypeId.Equals(matchTypeToAdd.MatchTypeId)).Any())
+            if (almaMaterToAdd.AlmaMaterId != null &&
+                _almaMaterService.Get(x => x.AlmaMaterId.Equals(almaMaterToAdd.AlmaMaterId)).Any())
             {
                 throw new InvalidOperationException("A match type with that Id already exist.");
             }
 
-            if (matchTypeToAdd.MatchTypeId.Equals(Guid.Empty))
+            if (almaMaterToAdd.AlmaMaterId.Equals(Guid.Empty))
             {
-                matchTypeToAdd.MatchTypeId = Guid.NewGuid();
+                almaMaterToAdd.AlmaMaterId = Guid.NewGuid();
             }
 
-            return _matchTypeService.SaveorUpdate(matchTypeToAdd);
+            return _almaMaterService.SaveorUpdate(almaMaterToAdd);
         }
 
         //UpdateMatch
         [HttpPut]
-        public MatchType UpdateMatchType([FromBody]MatchType matchTypeToUpdate)
+        public AlmaMater UpdateAlmaMater([FromBody]AlmaMater almaMaterToUpdate)
         {
             //if (matchTypeToUpdate.MatchTypeId == null
             //    || !_matchTypeService.GetMatchTypes(x => x.MatchTypeId.Equals(matchTypeToUpdate.MatchTypeId)).Any())
@@ -55,15 +55,15 @@ namespace FooseStats.Web.Api.Controllers
             //    throw new InvalidOperationException("Match type to update does not already exist.");
             //}
 
-            return _matchTypeService.SaveorUpdate(matchTypeToUpdate);
+            return _almaMaterService.SaveorUpdate(almaMaterToUpdate);
         }
 
         //DeleteMatch
         [HttpPost]
         [Route("Delete")]
-        public int DeleteMatchType([FromBody]MatchType matchTypeToDelete)
+        public int DeleteMatchType([FromBody]AlmaMater matchTypeToDelete)
         {
-            return _matchTypeService.Delete(matchTypeToDelete);
+            return _almaMaterService.Delete(matchTypeToDelete);
         }
     }
 }

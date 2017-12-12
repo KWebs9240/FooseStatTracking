@@ -9,45 +9,45 @@ using Microsoft.AspNetCore.Mvc;
 namespace FooseStats.Web.Api.Controllers
 {
     [Route("api/[controller]")]
-    public class MatchTypeController : Controller
+    public class LocationController : Controller
     {
-        private readonly IBaseDA<MatchType> _matchTypeService;
+        private readonly IBaseDA<Location> _locationService;
 
-        public MatchTypeController(IBaseDA<MatchType> matchTypeService)
+        public LocationController(IBaseDA<Location> locationService)
         {
-            _matchTypeService = matchTypeService;
+            _locationService = locationService;
         }
 
         //GetMatches
         [HttpGet]
-        public IEnumerable<MatchType> GetMatchTypes()
+        public IEnumerable<Location> GetLocations()
         {
-            IEnumerable<MatchType> rtnList = _matchTypeService.Get();
+            IEnumerable<Location> rtnList = _locationService.Get();
 
             return rtnList;
         }
 
         //AddMatch
         [HttpPost]
-        public MatchType AddMatchType([FromBody]MatchType matchTypeToAdd)
+        public Location AddLocation([FromBody]Location locationToAdd)
         {
-            if (matchTypeToAdd.MatchTypeId != null &&
-                _matchTypeService.Get(x => x.MatchTypeId.Equals(matchTypeToAdd.MatchTypeId)).Any())
+            if (locationToAdd.LocationId != null &&
+                _locationService.Get(x => x.LocationId.Equals(locationToAdd.LocationId)).Any())
             {
                 throw new InvalidOperationException("A match type with that Id already exist.");
             }
 
-            if (matchTypeToAdd.MatchTypeId.Equals(Guid.Empty))
+            if (locationToAdd.LocationId.Equals(Guid.Empty))
             {
-                matchTypeToAdd.MatchTypeId = Guid.NewGuid();
+                locationToAdd.LocationId = Guid.NewGuid();
             }
 
-            return _matchTypeService.SaveorUpdate(matchTypeToAdd);
+            return _locationService.SaveorUpdate(locationToAdd);
         }
 
         //UpdateMatch
         [HttpPut]
-        public MatchType UpdateMatchType([FromBody]MatchType matchTypeToUpdate)
+        public Location UpdateMatchType([FromBody]Location locationToUpdate)
         {
             //if (matchTypeToUpdate.MatchTypeId == null
             //    || !_matchTypeService.GetMatchTypes(x => x.MatchTypeId.Equals(matchTypeToUpdate.MatchTypeId)).Any())
@@ -55,15 +55,15 @@ namespace FooseStats.Web.Api.Controllers
             //    throw new InvalidOperationException("Match type to update does not already exist.");
             //}
 
-            return _matchTypeService.SaveorUpdate(matchTypeToUpdate);
+            return _locationService.SaveorUpdate(locationToUpdate);
         }
 
         //DeleteMatch
         [HttpPost]
         [Route("Delete")]
-        public int DeleteMatchType([FromBody]MatchType matchTypeToDelete)
+        public int DeleteLocation([FromBody]Location locationToDelete)
         {
-            return _matchTypeService.Delete(matchTypeToDelete);
+            return _locationService.Delete(locationToDelete);
         }
     }
 }
