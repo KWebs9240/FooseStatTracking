@@ -15,5 +15,8 @@ namespace FooseStats.Data.FooseStats.Data.Ef.Entities
         public DateTime CreatedDate { get; set; }
         public DateTime UpdateDate { get; set; }
         public string HexColor { get; set; }
+
+        public Guid LocationId { get; set; }
+        public Guid AlmaMaterId { get; set; }
     }
 }
