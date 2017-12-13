@@ -70,7 +70,7 @@ namespace FooseStats.Data.Services
                 }
                 else
                 {
-                    Mapper.Map<T, T>(updt, toSave);
+                    Mapper.Map<T, T>(toSave, updt);
                 }
 
                 db.SaveChanges();

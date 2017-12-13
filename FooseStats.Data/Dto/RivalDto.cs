@@ -14,6 +14,9 @@ namespace FooseStats.Data.Dto
         public DateTime UpdateDate { get; set; }
         public string HexColor { get; set; }
 
+        public Guid LocationId { get; set; }
+        public Guid AlmaMaterId { get; set; }
+
         //Games Info
         public Dictionary<Guid, int> RivalGamesPlayed { get; set; }
         public Dictionary<Guid, int> RivalGamesWon { get; set; }
