@@ -13,6 +13,8 @@ namespace FooseStats.Data.FooseStats.Data.Ef
         public DbSet<MatchType> MatchTypes { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<AlmaMater> AlmaMaters { get; set; }
+        public DbSet<TournamentHeader> TournamentHeaders { get; set; }
+        public DbSet<TournamentRelation> TournamentRelations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
