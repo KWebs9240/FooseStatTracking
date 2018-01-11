@@ -14,8 +14,6 @@ namespace FooseStats.Data.Dto
         public DateTime CreatedDate { get; set; }
         public DateTime UpdateDate { get; set; }
 
-        public Match CurrentMatch { get; set; }
-        public Match RightMatch { get; set; }
-        public Match LeftMatch { get; set; }
+        public TournamentMatchDto TournamentMatch { get; set; }
     }
 }
