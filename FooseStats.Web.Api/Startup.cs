@@ -43,6 +43,8 @@ namespace FooseStats.Web.Api
                 //Entity to Dto Maps
                 cnfg.CreateMap<Player, PlayerDto>();
                 cnfg.CreateMap<Player, RivalDto>();
+                cnfg.CreateMap<TournamentHeader, TournamentDto>();
+                cnfg.CreateMap<TournamentCreationDto, TournamentHeader>();
 
                 //Entity to entity for copying maps
                 CreateUpdateableMap<Player>(cnfg);
@@ -50,6 +52,8 @@ namespace FooseStats.Web.Api
                 CreateUpdateableMap<MatchType>(cnfg);
                 CreateUpdateableMap<AlmaMater>(cnfg);
                 CreateUpdateableMap<Location>(cnfg);
+                CreateUpdateableMap<TournamentHeader>(cnfg);
+                CreateUpdateableMap<TournamentRelation>(cnfg);
             });
 
             services.AddSingleton<IBaseDA<Player>>(new BaseDAService<Player>((FooseStatsContext db) => db.Players, (P1, P2) => P1.PlayerId.Equals(P2.PlayerId)));
@@ -57,6 +61,8 @@ namespace FooseStats.Web.Api
             services.AddSingleton<IBaseDA<MatchType>>(new BaseDAService<MatchType>((FooseStatsContext db) => db.MatchTypes, (MT1, MT2) => MT1.MatchTypeId.Equals(MT2.MatchTypeId)));
             services.AddSingleton<IBaseDA<Location>>(new BaseDAService<Location>((FooseStatsContext db) => db.Locations, (L1, L2) => L1.LocationId.Equals(L2.LocationId)));
             services.AddSingleton<IBaseDA<AlmaMater>>(new BaseDAService<AlmaMater>((FooseStatsContext db) => db.AlmaMaters, (AM1, AM2) => AM1.AlmaMaterId.Equals(AM2.AlmaMaterId)));
+            services.AddSingleton<IBaseDA<TournamentHeader>>(new BaseDAService<TournamentHeader>((FooseStatsContext db) => db.TournamentHeaders, (TH1, TH2) => TH1.TournamentId.Equals(TH2.TournamentId)));
+            services.AddSingleton<IBaseDA<TournamentRelation>>(new BaseDAService<TournamentRelation>((FooseStatsContext db) => db.TournamentRelations, (TR1, TR2) => TR1.TournamentRelationId.Equals(TR2.TournamentRelationId)));
             services.AddSingleton<IConfigurationRoot>(Configuration);
         }
 
