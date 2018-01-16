@@ -15,5 +15,11 @@ namespace FooseStats.Data.Dto
         public DateTime UpdateDate { get; set; }
 
         public List<Player> Participants { get; set; }
+
+        public Player GetRandomPlayer()
+        {
+            Random rand = new Random();
+            return Participants[rand.Next(Participants.Count - 1)];
+        }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FooseStats.Data.FooseStats.Data.Ef.Entities;
+using FooseStats.Data.FooseStats.Data.Ef.Helpers;
 using FooseStats.Data.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using FooseStats.Data.Dto;
@@ -61,22 +62,98 @@ namespace FooseStats.Web.Api.Controllers
         public TournamentDto CreateTournament([FromBody]TournamentCreationDto creationDto)
         {
             TournamentHeader svHeader = Mapper.Map<TournamentHeader>(creationDto);
+
+            svHeader.HeadMatchId = Guid.NewGuid();
+
             _tournamentHeaderService.SaveorUpdate(svHeader);
 
             //Create relations
+            //Breadth first "search" to fill in all the games?
             //One per player except for the first
-            //Num Relations = Num players - 1
+            Queue<TournamentRelation> relationProcessQueue = new Queue<TournamentRelation>();
+            relationProcessQueue.Enqueue(new TournamentRelation());
 
-            //Relate them to eachother
+            int numParticipants = creationDto.Participants.Count;
+            int numGamesToAdd = numParticipants - 1;
+            List<Match> matchSaveList = new List<Match>();
+            List<TournamentRelation> relationSaveList = new List<TournamentRelation>();
 
-            //Create the required matches for each relation
+            while(numGamesToAdd > 0)
+            {
+                numGamesToAdd--;
 
-            //Assign default players to the bottom matches
+                TournamentRelation currentRelation = relationProcessQueue.Dequeue();
+                currentRelation.TournamentRelationId = Guid.NewGuid();
+                currentRelation.TournamentHeaderId = svHeader.TournamentId;
+                if (currentRelation.ChildMatchId == null) { matchSaveList.Add(currentRelation.ChildMatchId.AddMatchToRelation())};
+                relationSaveList.Add(currentRelation);
+
+                if(numGamesToAdd > 0)
+                {
+                    numGamesToAdd--;
+                    Match leftMatch = currentRelation.LeftParentMatchId.AddMatchToRelation();
+                    matchSaveList.Add(leftMatch);
+                    relationProcessQueue.Enqueue(new TournamentRelation()
+                    {
+                        ChildMatchId = currentRelation.LeftParentMatchId
+                    });
+
+                    if((numParticipants % 2 != 0) && ((((decimal)numParticipants)/2 - 0.5m) == numGamesToAdd))
+                    {
+                        Player leftPlayer2 = creationDto.GetRandomPlayer();
+                        leftMatch.Player2Id = leftPlayer2.PlayerId;
+                        creationDto.Participants.Remove(leftPlayer2);
+                    }
+                    else if(((decimal)numParticipants)/2 >= numGamesToAdd)
+                    {
+                        Player leftPlayer1 = creationDto.GetRandomPlayer();
+                        leftMatch.Player1Id = leftPlayer1.PlayerId;
+                        creationDto.Participants.Remove(leftPlayer1);
+
+                        Player leftPlayer2 = creationDto.GetRandomPlayer();
+                        leftMatch.Player2Id = leftPlayer2.PlayerId;
+                        creationDto.Participants.Remove(leftPlayer2);
+                    }
+                }
+
+                numGamesToAdd--;
+
+                if(numGamesToAdd > 0)
+                {
+                    numGamesToAdd--;
+                    Match rightMatch = currentRelation.RightParentMatchId.AddMatchToRelation();
+                    matchSaveList.Add(rightMatch);
+                    relationProcessQueue.Enqueue(new TournamentRelation()
+                    {
+                        ChildMatchId = currentRelation.RightParentMatchId
+                    });
+
+                    if ((numParticipants % 2 != 0) && ((((decimal)numParticipants) / 2 - 0.5m) == numGamesToAdd))
+                    {
+                        Player rightPlayer2 = creationDto.GetRandomPlayer();
+                        rightMatch.Player2Id = rightPlayer2.PlayerId;
+                        creationDto.Participants.Remove(rightPlayer2);
+                    }
+                    else if (((decimal)numParticipants) / 2 >= numGamesToAdd)
+                    {
+                        Player rightPlayer1 = creationDto.GetRandomPlayer();
+                        rightMatch.Player1Id = rightPlayer1.PlayerId;
+                        creationDto.Participants.Remove(rightPlayer1);
+
+                        Player rightPlayer2 = creationDto.GetRandomPlayer();
+                        rightMatch.Player2Id = rightPlayer2.PlayerId;
+                        creationDto.Participants.Remove(rightPlayer2);
+                    }
+                }
+            }
 
             //Save all of it
+            _tournamentRelationService.SaveorUpdateEnum(relationSaveList);
+            _matchService.SaveorUpdateEnum(matchSaveList);
 
             //Build the tournament Dto: ideally it's already built
             //Return it
+            //Need this to at least return the header
         }
 
         //UpdateTournament
