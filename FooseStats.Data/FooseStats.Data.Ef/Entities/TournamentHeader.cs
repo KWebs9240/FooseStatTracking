@@ -12,6 +12,7 @@ namespace FooseStats.Data.FooseStats.Data.Ef.Entities
         public Guid TournamentId { get; set; }
         public string TournamentName { get; set; }
         public Guid HeadMatchId { get; set; }
+        public Guid MatchTypeId { get; set; }
 
         public DateTime CreatedDate { get; set; }
         public DateTime UpdateDate { get; set; }

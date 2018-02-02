@@ -158,6 +158,8 @@ namespace FooseStats.Web.Api.Controllers
                 }
             }
 
+            matchSaveList.ForEach(x => x.MatchTypeId = creationDto.MatchTypeId);
+
             //Save all of it
             _tournamentRelationService.SaveorUpdateEnum(relationSaveList);
             _matchService.SaveorUpdateEnum(matchSaveList);
