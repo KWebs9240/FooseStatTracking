@@ -80,18 +80,30 @@ namespace FooseStats.Web.Api.Controllers
 
             while(numGamesToAdd > 0)
             {
-                numGamesToAdd--;
-
                 TournamentRelation currentRelation = relationProcessQueue.Dequeue();
                 currentRelation.TournamentRelationId = Guid.NewGuid();
                 currentRelation.TournamentHeaderId = svHeader.TournamentId;
-                if (currentRelation.ChildMatchId == null) { matchSaveList.Add(currentRelation.ChildMatchId.AddMatchToRelation())};
+                if (currentRelation.ChildMatchId == null || currentRelation.ChildMatchId.Equals(Guid.Empty))
+                {
+                    numGamesToAdd--;
+                    if(matchSaveList.Count <= 0)
+                    {
+                        currentRelation.ChildMatchId = svHeader.HeadMatchId;
+                    }
+                    else
+                    {
+                        currentRelation.ChildMatchId = Guid.NewGuid();
+                    }
+                    matchSaveList.Add(new Match() { MatchId = currentRelation.ChildMatchId });
+                }
+
                 relationSaveList.Add(currentRelation);
 
                 if(numGamesToAdd > 0)
                 {
                     numGamesToAdd--;
-                    Match leftMatch = currentRelation.LeftParentMatchId.AddMatchToRelation();
+                    currentRelation.LeftParentMatchId = Guid.NewGuid();
+                    Match leftMatch = new Match() { MatchId = currentRelation.LeftParentMatchId };
                     matchSaveList.Add(leftMatch);
                     relationProcessQueue.Enqueue(new TournamentRelation()
                     {
@@ -116,12 +128,11 @@ namespace FooseStats.Web.Api.Controllers
                     }
                 }
 
-                numGamesToAdd--;
-
                 if(numGamesToAdd > 0)
                 {
                     numGamesToAdd--;
-                    Match rightMatch = currentRelation.RightParentMatchId.AddMatchToRelation();
+                    currentRelation.RightParentMatchId = Guid.NewGuid();
+                    Match rightMatch = new Match() { MatchId = currentRelation.RightParentMatchId };
                     matchSaveList.Add(rightMatch);
                     relationProcessQueue.Enqueue(new TournamentRelation()
                     {
@@ -151,9 +162,11 @@ namespace FooseStats.Web.Api.Controllers
             _tournamentRelationService.SaveorUpdateEnum(relationSaveList);
             _matchService.SaveorUpdateEnum(matchSaveList);
 
-            //Build the tournament Dto: ideally it's already built
-            //Return it
-            //Need this to at least return the header
+            var rtnDto = Mapper.Map<TournamentDto>(svHeader);
+            rtnDto.TournamentMatch = new TournamentMatchDto();
+            rtnDto.TournamentMatch = rtnDto.RecursiveBuildTournamentDtoMatches(svHeader.HeadMatchId, relationSaveList.ToDictionary(x => x.ChildMatchId, x => x), matchSaveList.ToDictionary(x => x.MatchId, x => x));
+
+            return rtnDto;
         }
 
         //UpdateTournament
@@ -168,12 +181,13 @@ namespace FooseStats.Web.Api.Controllers
             return tournamentDtoToUpdate;
         }
 
+        //For now no deleting because it's likely going to be a pain
         //DeleteMatch
-        [HttpPost]
-        [Route("Delete")]
-        public int DeleteLocation([FromBody]Location locationToDelete)
-        {
-            return _locationService.Delete(locationToDelete);
-        }
+        //[HttpPost]
+        //[Route("Delete")]
+        //public int DeleteLocation([FromBody]Location locationToDelete)
+        //{
+        //    return _locationService.Delete(locationToDelete);
+        //}
     }
 }

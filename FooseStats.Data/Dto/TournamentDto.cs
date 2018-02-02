@@ -29,13 +29,15 @@ namespace FooseStats.Data.Dto
             {
                 var currentRel = relationDictionary[currentMatch];
 
-                if(currentRel.LeftParentMatchId != null)
+                if(currentRel.LeftParentMatchId != null && !currentRel.LeftParentMatchId.Equals(Guid.Empty))
                 {
-                    RecursiveBuildTournamentDtoMatches(currentRel.LeftParentMatchId, relationDictionary, matchDictionary, matchToFill.LeftMatch);
+                    matchToFill.LeftMatch = new TournamentMatchDto();
+                    matchToFill.LeftMatch = RecursiveBuildTournamentDtoMatches(currentRel.LeftParentMatchId, relationDictionary, matchDictionary, matchToFill.LeftMatch);
                 }
-                if(currentRel.RightParentMatchId != null)
+                if(currentRel.RightParentMatchId != null && !currentRel.RightParentMatchId.Equals(Guid.Empty))
                 {
-                    RecursiveBuildTournamentDtoMatches(currentRel.RightParentMatchId, relationDictionary, matchDictionary, matchToFill.RightMatch);
+                    matchToFill.RightMatch = new TournamentMatchDto();
+                    matchToFill.RightMatch = RecursiveBuildTournamentDtoMatches(currentRel.RightParentMatchId, relationDictionary, matchDictionary, matchToFill.RightMatch);
                 }
             }
 

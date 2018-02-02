@@ -7,10 +7,6 @@ namespace FooseStats.Data.FooseStats.Data.Ef.Helpers
 {
     public static class TournamentRelationExtensions
     {
-        public static Match AddMatchToRelation (this Guid source)
-        {
-            source = Guid.NewGuid();
-            return new Match() { MatchId = source };
-        }
+        //Maybe used someday, but for now I tried to get trickey and screwed it up
     }
 }
