@@ -46,10 +46,14 @@ namespace FooseStats.Web.Api.Controllers
 
             relationDict = _tournamentRelationService.Get(x => x.TournamentHeaderId.Equals(tournamentId)).ToDictionary(x => x.ChildMatchId, x => x);
 
-            var tournyMatchesHashSet = relationDict.Values.Select(x => x.ChildMatchId);
+            var tournyMatchesHashSet = relationDict.Values.Select(x => x.ChildMatchId)
+                .Concat(relationDict.Values.Select(x => x.LeftParentMatchId))
+                .Concat(relationDict.Values.Select(x => x.RightParentMatchId));
+
             matchDict = _matchService.Get(x => tournyMatchesHashSet.Contains(x.MatchId)).ToDictionary(x => x.MatchId, x => x);
 
             TournamentDto rtnDto = Mapper.Map<TournamentDto>(_tournamentHeaderService.Get(x => x.TournamentId.Equals(tournamentId)).Single());
+            rtnDto.TournamentMatch = new TournamentMatchDto();
 
             rtnDto.TournamentMatch = rtnDto.RecursiveBuildTournamentDtoMatches(rtnDto.HeadMatchId, relationDict, matchDict);
 
