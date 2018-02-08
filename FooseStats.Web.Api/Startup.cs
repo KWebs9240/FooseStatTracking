@@ -43,7 +43,8 @@ namespace FooseStats.Web.Api
                 //Entity to Dto Maps
                 cnfg.CreateMap<Player, PlayerDto>();
                 cnfg.CreateMap<Player, RivalDto>();
-                cnfg.CreateMap<Match, MatchDto>();
+                cnfg.CreateMap<Match, MatchDto>()
+                    .ReverseMap();
                 cnfg.CreateMap<TournamentHeader, TournamentDto>();
                 cnfg.CreateMap<TournamentCreationDto, TournamentHeader>();
 

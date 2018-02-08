@@ -17,7 +17,7 @@ namespace FooseStats.Data.Dto
 
         public TournamentMatchDto TournamentMatch { get; set; }
 
-        public TournamentMatchDto RecursiveBuildTournamentDtoMatches(Guid currentMatch, Dictionary<Guid, TournamentRelation> relationDictionary, Dictionary<Guid, Match> matchDictionary, TournamentMatchDto matchToFill = null)
+        public TournamentMatchDto RecursiveBuildTournamentDtoMatches(Guid currentMatch, Dictionary<Guid, TournamentRelation> relationDictionary, Dictionary<Guid, MatchDto> matchDictionary, TournamentMatchDto matchToFill = null)
         {
             matchToFill = matchToFill ?? this.TournamentMatch;
 
@@ -45,11 +45,11 @@ namespace FooseStats.Data.Dto
             return matchToFill;
         }
 
-        public List<Match> RecursiveGetAllMatches(TournamentMatchDto MatchToAdd = null)
+        public List<MatchDto> RecursiveGetAllMatches(TournamentMatchDto MatchToAdd = null)
         {
             MatchToAdd = MatchToAdd ?? this.TournamentMatch;
 
-            List<Match> rtnList = new List<Match>();
+            List<MatchDto> rtnList = new List<MatchDto>();
 
             rtnList.Add(MatchToAdd.CurrentMatch);
 

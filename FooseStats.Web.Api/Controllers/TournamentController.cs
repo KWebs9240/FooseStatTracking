@@ -17,14 +17,17 @@ namespace FooseStats.Web.Api.Controllers
         private readonly IBaseDA<TournamentHeader> _tournamentHeaderService;
         private readonly IBaseDA<TournamentRelation> _tournamentRelationService;
         private readonly IBaseDA<Match> _matchService;
+        private readonly IBaseDA<Player> _playerService;
 
         public TournamentController(IBaseDA<TournamentHeader> tournamentHeaderService,
             IBaseDA<TournamentRelation> tournamentRelationService,
-            IBaseDA<Match> matchService)
+            IBaseDA<Match> matchService,
+            IBaseDA<Player> playerService)
         {
             _tournamentHeaderService = tournamentHeaderService;
             _tournamentRelationService = tournamentRelationService;
             _matchService = matchService;
+            _playerService = playerService;
         }
 
         //GetTournament
@@ -42,7 +45,7 @@ namespace FooseStats.Web.Api.Controllers
         public TournamentDto GetTournament([FromQuery]Guid tournamentId)
         {
             Dictionary<Guid, TournamentRelation> relationDict = null;
-            Dictionary<Guid, Match> matchDict = null;
+            Dictionary<Guid, MatchDto> matchDict = null;
 
             relationDict = _tournamentRelationService.Get(x => x.TournamentHeaderId.Equals(tournamentId)).ToDictionary(x => x.ChildMatchId, x => x);
 
@@ -50,7 +53,8 @@ namespace FooseStats.Web.Api.Controllers
                 .Concat(relationDict.Values.Select(x => x.LeftParentMatchId))
                 .Concat(relationDict.Values.Select(x => x.RightParentMatchId));
 
-            matchDict = _matchService.Get(x => tournyMatchesHashSet.Contains(x.MatchId)).ToDictionary(x => x.MatchId, x => x);
+            matchDict = _matchService.Get(x => tournyMatchesHashSet.Contains(x.MatchId)).ToDictionary(x => x.MatchId, x => Mapper.Map<MatchDto>(x));
+            matchDict.Values.ToList().AddPlayerInfo(_playerService);
 
             TournamentDto rtnDto = Mapper.Map<TournamentDto>(_tournamentHeaderService.Get(x => x.TournamentId.Equals(tournamentId)).Single());
             rtnDto.TournamentMatch = new TournamentMatchDto();
@@ -170,7 +174,7 @@ namespace FooseStats.Web.Api.Controllers
 
             var rtnDto = Mapper.Map<TournamentDto>(svHeader);
             rtnDto.TournamentMatch = new TournamentMatchDto();
-            rtnDto.TournamentMatch = rtnDto.RecursiveBuildTournamentDtoMatches(svHeader.HeadMatchId, relationSaveList.ToDictionary(x => x.ChildMatchId, x => x), matchSaveList.ToDictionary(x => x.MatchId, x => x));
+            rtnDto.TournamentMatch = rtnDto.RecursiveBuildTournamentDtoMatches(svHeader.HeadMatchId, relationSaveList.ToDictionary(x => x.ChildMatchId, x => x), matchSaveList.ToDictionary(x => x.MatchId, x => Mapper.Map<MatchDto>(x)));
 
             return rtnDto;
         }
@@ -182,7 +186,7 @@ namespace FooseStats.Web.Api.Controllers
         {
             //This one is essentially just updating any games on the tournament.
 
-            _matchService.SaveorUpdateEnum(tournamentDtoToUpdate.RecursiveGetAllMatches());
+            _matchService.SaveorUpdateEnum(Mapper.Map<List<Match>>(tournamentDtoToUpdate.RecursiveGetAllMatches()));
 
             return tournamentDtoToUpdate;
         }
